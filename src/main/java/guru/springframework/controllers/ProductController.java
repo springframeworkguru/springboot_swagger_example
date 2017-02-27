@@ -4,6 +4,8 @@ import guru.springframework.domain.Product;
 import guru.springframework.services.ProductService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,13 +24,20 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @ApiOperation(value = "View a list of available products")
-    @RequestMapping(value = "/list", method= RequestMethod.GET,produces = "application/json")
+    @ApiOperation(value = "View a list of available products",response = Iterable.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully retrieved list"),
+            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
+            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
+    }
+    )
+    @RequestMapping(value = "/list", method= RequestMethod.GET, produces = "application/json")
     public Iterable<Product> list(Model model){
         Iterable<Product> productList = productService.listAllProducts();
         return productList;
     }
-    @ApiOperation(value = "Search a product with an ID")
+    @ApiOperation(value = "Search a product with an ID",response = Product.class)
     @RequestMapping(value = "/show/{id}", method= RequestMethod.GET, produces = "application/json")
     public Product showProduct(@PathVariable Integer id, Model model){
        Product product = productService.getProductById(id);
