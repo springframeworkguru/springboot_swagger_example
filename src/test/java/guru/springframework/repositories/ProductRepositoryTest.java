@@ -34,7 +34,7 @@ public class ProductRepositoryTest {
         productRepository.save(product);
         assertNotNull(product.getId()); //not null after save
         //fetch from DB
-        Product fetchedProduct = productRepository.findOne(product.getId());
+        Product fetchedProduct = productRepository.findById(product.getId()).orElse(null);
         //should not be null
         assertNotNull(fetchedProduct);
         //should equal
@@ -44,7 +44,7 @@ public class ProductRepositoryTest {
         fetchedProduct.setDescription("New Description");
         productRepository.save(fetchedProduct);
         //get from DB, should be updated
-        Product fetchedUpdatedProduct = productRepository.findOne(fetchedProduct.getId());
+        Product fetchedUpdatedProduct = productRepository.findById(fetchedProduct.getId()).orElse(null);
         assertEquals(fetchedProduct.getDescription(), fetchedUpdatedProduct.getDescription());
         //verify count of products in DB
         long productCount = productRepository.count();

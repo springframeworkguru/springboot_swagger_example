@@ -8,6 +8,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+
+import java.util.Optional;
+
 import static org.mockito.Mockito.*;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -31,7 +34,7 @@ public class ProductServiceImplMockTest {
     @Test
     public void shouldReturnProduct_whenGetProductByIdIsCalled() throws Exception {
         // Arrange
-        when(productRepository.findOne(5)).thenReturn(product);
+        when(productRepository.findById(5)).thenReturn(Optional.of(product));
         // Act
         Product retrievedProduct = productServiceImpl.getProductById(5);
         // Assert
@@ -50,11 +53,11 @@ public class ProductServiceImplMockTest {
     @Test
     public void shouldCallDeleteMethodOfProductRepository_whenDeleteProductIsCalled() throws Exception {
         // Arrange
-        doNothing().when(productRepository).delete(5);
+        doNothing().when(productRepository).deleteById(5);
         ProductRepository my = Mockito.mock(ProductRepository.class);
         // Act
         productServiceImpl.deleteProduct(5);
         // Assert
-        verify(productRepository, times(1)).delete(5);
+        verify(productRepository, times(1)).deleteById(5);
     }
 }
